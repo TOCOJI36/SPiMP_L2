@@ -3,16 +3,15 @@
 
 (def queue (a/chan 100))
 
-(defn writing [n]
+(defn writing [chan n]
   (go (doseq [x (range 0 n) ]
       (let [value (rand-int 10)]
-        (println (str "put -> " value))
-        (>! queue value)))))
+        (>! chan value)))))
 
-(defn reading []
+(defn reading [chan]
   (go [] (while true
-           (loop [i (<! queue) v [] ]
-             (if (< 0 i) (recur (dec i) (conj v (<! queue)))
+           (loop [i (<! chan) v [] ]
+             (if (< 0 i) (recur (dec i) (conj v (<! chan)))
                          (println v))))))
 
 (defn -main [] (println "gogog"))
